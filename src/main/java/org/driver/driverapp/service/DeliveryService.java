@@ -207,7 +207,6 @@ public class DeliveryService {
                 .filter(d -> d.getStatus() == DeliveryStatus.OVERDUE)
                 .filter(d -> driverId == null || (d.getAssignedDriver() != null && d.getAssignedDriver().getId().equals(driverId)))
                 .filter(d -> city == null || (d.getDropoffAddress() != null && city.equalsIgnoreCase(d.getDropoffAddress().getCity())))
-                .filter(d -> region == null || (d.getDropoffAddress() != null && region.equalsIgnoreCase(d.getDropoffAddress().getRegion())))
                 .filter(d -> from == null || (d.getDueAt() != null && !d.getDueAt().isBefore(from)))
                 .filter(d -> to == null || (d.getDueAt() != null && !d.getDueAt().isAfter(to)))
                 .toList();
@@ -220,7 +219,6 @@ public class DeliveryService {
                 .filter(d -> d.getStatus() == DeliveryStatus.OVERDUE)
                 .filter(d -> driverId == null || (d.getAssignedDriver() != null && d.getAssignedDriver().getId().equals(driverId)))
                 .filter(d -> city == null || (d.getDropoffAddress() != null && city.equalsIgnoreCase(d.getDropoffAddress().getCity())))
-                .filter(d -> region == null || (d.getDropoffAddress() != null && region.equalsIgnoreCase(d.getDropoffAddress().getRegion())))
                 .filter(d -> from == null || (d.getDueAt() != null && !d.getDueAt().isBefore(from)))
                 .filter(d -> to == null || (d.getDueAt() != null && !d.getDueAt().isAfter(to)))
                 .toList();

@@ -9,10 +9,11 @@ import lombok.*;
 @AllArgsConstructor
 
 public class Address {
-    private String line1;
-    private String line2;
+    private String streetName;        // Optional
+    private String houseNumber;       // Optional
     private String city;
-    private String region;   // e.g., Amhara
-    private String postalCode;
-    private String country;  // e.g., ET
+    private String postalCode;        // Optional
+    private double latitude;          // Required
+    private double longitude;         // Required
+    private String locationNote;      // Optional notes like "next to the blue church"
 }

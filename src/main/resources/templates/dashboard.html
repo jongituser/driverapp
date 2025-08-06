@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            color: white;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+        }
+        .sidebar .nav-link.active {
+            background-color: #495057;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar d-flex flex-column p-3">
+    <h2 class="text-center mb-4">Dashboard</h2>
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+            <a class="nav-link active" href="#deliveries">🚚 Deliveries</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#drivers">👨‍✈️ Drivers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#inventory">📦 Inventory</a>
+        </li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div class="content">
+    <h1 class="mb-4">Admin Panel</h1>
+
+    <!-- Delivery Section -->
+    <section id="deliveries" class="mb-5">
+        <h2>🚚 Delivery Overview</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5>Total Deliveries</h5>
+                        <h2 th:text="${dashboard.totalDeliveries}">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5>In Progress</h5>
+                        <h2 th:text="${dashboard.inProgressDeliveries}">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5>Delivered Today</h5>
+                        <h2 th:text="${dashboard.deliveredToday}">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row g-4 mt-2">
+            <div class="col-md-6">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5>Overdue</h5>
+                        <h2 th:text="${dashboard.overdueDeliveries}">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5>Avg Delivery Time</h5>
+                        <h2 th:text="${dashboard.averageDeliveryDurationMinutes}">0.0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Driver Section -->
+    <section id="drivers" class="mb-5">
+        <h2>👨‍✈️ Top Drivers</h2>
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Total Deliveries</th>
+                <th>On-Time %</th>
+                <th>Avg Delivery Time</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="driver : ${dashboard.topDrivers}">
+                <td th:text="${driver.name}">Driver Name</td>
+                <td th:text="${driver.totalDeliveries}">0</td>
+                <td th:text="${driver.onTimePercentage}">0%</td>
+                <td th:text="${driver.averageDeliveryTime}">0.0</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Inventory Section -->
+    <section id="inventory">
+        <h2>📦 Low Inventory Alerts</h2>
+        <table class="table table-striped table-bordered">
+            <thead class="table-warning">
+            <tr>
+                <th>Partner</th>
+                <th>Product</th>
+                <th>Remaining Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${dashboard.lowInventoryAlerts}">
+                <td th:text="${item.partnerName}">Partner</td>
+                <td th:text="${item.productName}">Product</td>
+                <td th:text="${item.quantity}">0</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+
+</body>
+</html>

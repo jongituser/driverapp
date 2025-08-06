@@ -4,6 +4,7 @@ package org.driver.driverapp.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+import org.driver.driverapp.enums.DeliveryStatus;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;

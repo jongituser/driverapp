@@ -2,7 +2,7 @@ package org.driver.driverapp.scheduler;
 
 import lombok.RequiredArgsConstructor;
 import org.driver.driverapp.model.Delivery;
-import org.driver.driverapp.model.DeliveryStatus;
+import org.driver.driverapp.enums.DeliveryStatus;
 import org.driver.driverapp.repository.DeliveryRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

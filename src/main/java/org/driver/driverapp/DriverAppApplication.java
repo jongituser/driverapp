@@ -15,25 +15,4 @@ public class DriverAppApplication {
     public static void main(String[] args) {
         SpringApplication.run(DriverAppApplication.class, args);
     }
-
-    @Bean
-    CommandLineRunner seedPartner(PartnerRepository partners) {
-        return args -> {
-            if (partners.count() == 0) {
-                Partner clinic = Partner.builder()
-                        .name("Test Clinic")
-                        .contactPhone("+46 31 000 00 00")
-                        .address(new Address(
-                                "Storgatan 1",
-                                null,
-                                "Borås",
-                                "Västra Götaland",
-                                "503 31",
-                                "SE"
-                        ))
-                        .build();
-                partners.save(clinic);
-            }
-        };
-    }
 }

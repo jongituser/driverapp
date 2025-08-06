@@ -1,4 +1,4 @@
-package org.driver.driverapp.model;
+package org.driver.driverapp.enums;
 
 public enum DriverStatus {
     AVAILABLE, BUSY, OFFLINE

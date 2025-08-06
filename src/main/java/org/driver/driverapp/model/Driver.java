@@ -2,6 +2,7 @@ package org.driver.driverapp.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.driver.driverapp.enums.DriverStatus;
 
 @Entity
 @Data

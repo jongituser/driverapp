@@ -2,6 +2,8 @@ package org.driver.driverapp.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.driver.driverapp.enums.DeliveryStatus;
+import org.driver.driverapp.enums.DriverStatus;
 import org.driver.driverapp.model.*;
 import org.driver.driverapp.repository.*;
 import org.springframework.data.domain.*;

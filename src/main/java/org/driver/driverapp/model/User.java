@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.driver.driverapp.enums.Role;
 
-import java.util.Set;
-
 @Entity
 @Data
 @NoArgsConstructor
@@ -17,10 +15,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
-    private String password;
+    @Column(unique = true, nullable = false)
+    private String username; // Used for login (not email)
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(nullable = false)
+    private String password; // Hashed using BCrypt
+
     @Enumerated(EnumType.STRING)
-    private Set<Role> roles;
+    @Column(nullable = false)
+    private Role role;
+
+    @Column(unique = true)
+    private String email; // Used for contact / password recovery
+
+    private boolean enabled = true;
+
+    @OneToOne(mappedBy = "user")
+    private Driver driver;
 }

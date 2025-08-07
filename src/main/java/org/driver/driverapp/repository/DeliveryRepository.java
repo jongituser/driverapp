@@ -1,11 +1,10 @@
 package org.driver.driverapp.repository;
 
 import org.driver.driverapp.model.Delivery;
-import org.driver.driverapp.model.Driver;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
+@Repository
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
-    List<Delivery> findByAssignedDriver(Driver driver);
+    //TODO You can add custom queries here later if needed
 }

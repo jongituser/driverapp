@@ -1,7 +1,7 @@
 package org.driver.driverapp.service;
 
 import lombok.RequiredArgsConstructor;
-import org.driver.driverapp.dto.AuthResponseDTO;
+import org.driver.driverapp.dto.auth.AuthResponseDTO;
 import org.driver.driverapp.exception.TokenRefreshException;
 import org.driver.driverapp.model.RefreshToken;
 import org.driver.driverapp.model.User;

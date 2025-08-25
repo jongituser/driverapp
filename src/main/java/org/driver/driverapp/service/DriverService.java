@@ -1,9 +1,9 @@
 package org.driver.driverapp.service;
 
 import lombok.RequiredArgsConstructor;
-import org.driver.driverapp.dto.CreateDriverRequestDTO;
-import org.driver.driverapp.dto.DriverResponseDTO;
-import org.driver.driverapp.dto.UpdateDriverRequestDTO;
+import org.driver.driverapp.dto.driver.request.CreateDriverRequestDTO;
+import org.driver.driverapp.dto.driver.DriverResponseDTO;
+import org.driver.driverapp.dto.driver.UpdateDriverRequestDTO;
 import org.driver.driverapp.enums.DriverStatus;
 import org.driver.driverapp.mapper.DriverMapper;
 import org.driver.driverapp.model.Driver;

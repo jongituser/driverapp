@@ -1,8 +1,8 @@
 package org.driver.driverapp.mapper;
 
-import org.driver.driverapp.dto.CreateDriverRequestDTO;
-import org.driver.driverapp.dto.DriverResponseDTO;
-import org.driver.driverapp.dto.UpdateDriverRequestDTO;
+import org.driver.driverapp.dto.driver.request.CreateDriverRequestDTO;
+import org.driver.driverapp.dto.driver.DriverResponseDTO;
+import org.driver.driverapp.dto.driver.UpdateDriverRequestDTO;
 import org.driver.driverapp.enums.Role;
 import org.driver.driverapp.model.Driver;
 import org.driver.driverapp.model.User;

@@ -1,0 +1,1 @@
+{"@timestamp":"2025-08-25T04:37:59.3539878+02:00","level":"INFO","logger_name":"org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer","message":"Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl"}

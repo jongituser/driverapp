@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test - Ethiopian Delivery Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .status.connected {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .messages {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #f8f9fa;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .message {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-left: 3px solid #007bff;
+            background-color: white;
+        }
+        .message.error {
+            border-left-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .message.success {
+            border-left-color: #28a745;
+            background-color: #d4edda;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Test - Ethiopian Delivery Platform</h1>
+    
+    <div class="container">
+        <div class="section">
+            <h3>Connection Status</h3>
+            <div id="connectionStatus" class="status disconnected">Disconnected</div>
+            <button id="connectBtn" onclick="connect()">Connect</button>
+            <button id="disconnectBtn" onclick="disconnect()" disabled>Disconnect</button>
+        </div>
+
+        <div class="section">
+            <h3>Subscribe to Topics</h3>
+            <div class="form-group">
+                <label for="driverId">Driver ID:</label>
+                <input type="number" id="driverId" value="1">
+                <button onclick="subscribeToDriverLocation()">Subscribe to Driver Location</button>
+            </div>
+            <div class="form-group">
+                <label for="deliveryId">Delivery ID:</label>
+                <input type="number" id="deliveryId" value="1">
+                <button onclick="subscribeToDeliveryStatus()">Subscribe to Delivery Status</button>
+            </div>
+            <div class="form-group">
+                <label for="partnerId">Partner ID:</label>
+                <input type="number" id="partnerId" value="1">
+                <button onclick="subscribeToPartnerUpdates()">Subscribe to Partner Updates</button>
+            </div>
+            <button onclick="subscribeToBroadcast()">Subscribe to Broadcast</button>
+        </div>
+
+        <div class="section">
+            <h3>Send Test Messages</h3>
+            <div class="form-group">
+                <label for="testDriverId">Driver ID:</label>
+                <input type="number" id="testDriverId" value="1">
+                <button onclick="sendDriverLocationUpdate()">Send Driver Location Update</button>
+            </div>
+            <div class="form-group">
+                <label for="testDeliveryId">Delivery ID:</label>
+                <input type="number" id="testDeliveryId" value="1">
+                <button onclick="sendDeliveryStatusUpdate()">Send Delivery Status Update</button>
+            </div>
+            <div class="form-group">
+                <label for="testPartnerId">Partner ID:</label>
+                <input type="number" id="testPartnerId" value="1">
+                <button onclick="sendPartnerUpdate()">Send Partner Update</button>
+            </div>
+            <div class="form-group">
+                <label for="broadcastMessage">Broadcast Message:</label>
+                <input type="text" id="broadcastMessage" value="System test message">
+                <button onclick="sendBroadcastMessage()">Send Broadcast</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Received Messages</h3>
+            <div id="messages" class="messages"></div>
+            <button onclick="clearMessages()">Clear Messages</button>
+        </div>
+    </div>
+
+    <script>
+        let stompClient = null;
+        let subscriptions = [];
+
+        function connect() {
+            const socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+            
+            stompClient.connect({}, function (frame) {
+                updateConnectionStatus(true);
+                addMessage('Connected to WebSocket server', 'success');
+            }, function (error) {
+                updateConnectionStatus(false);
+                addMessage('Connection failed: ' + error, 'error');
+            });
+        }
+
+        function disconnect() {
+            if (stompClient !== null) {
+                // Unsubscribe from all topics
+                subscriptions.forEach(subscription => {
+                    subscription.unsubscribe();
+                });
+                subscriptions = [];
+                
+                stompClient.disconnect();
+                updateConnectionStatus(false);
+                addMessage('Disconnected from WebSocket server', 'success');
+            }
+        }
+
+        function updateConnectionStatus(connected) {
+            const statusDiv = document.getElementById('connectionStatus');
+            const connectBtn = document.getElementById('connectBtn');
+            const disconnectBtn = document.getElementById('disconnectBtn');
+            
+            if (connected) {
+                statusDiv.textContent = 'Connected';
+                statusDiv.className = 'status connected';
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+            } else {
+                statusDiv.textContent = 'Disconnected';
+                statusDiv.className = 'status disconnected';
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+            }
+        }
+
+        function subscribeToDriverLocation() {
+            if (!stompClient) {
+                addMessage('Please connect first', 'error');
+                return;
+            }
+            
+            const driverId = document.getElementById('driverId').value;
+            const subscription = stompClient.subscribe('/topic/driver/' + driverId + '/location', function (message) {
+                const data = JSON.parse(message.body);
+                addMessage('Driver Location Update: ' + JSON.stringify(data, null, 2), 'success');
+            });
+            subscriptions.push(subscription);
+            addMessage('Subscribed to driver location updates for driver ' + driverId, 'success');
+        }
+
+        function subscribeToDeliveryStatus() {
+            if (!stompClient) {
+                addMessage('Please connect first', 'error');
+                return;
+            }
+            
+            const deliveryId = document.getElementById('deliveryId').value;
+            const subscription = stompClient.subscribe('/topic/delivery/' + deliveryId + '/status', function (message) {
+                const data = JSON.parse(message.body);
+                addMessage('Delivery Status Update: ' + JSON.stringify(data, null, 2), 'success');
+            });
+            subscriptions.push(subscription);
+            addMessage('Subscribed to delivery status updates for delivery ' + deliveryId, 'success');
+        }
+
+        function subscribeToPartnerUpdates() {
+            if (!stompClient) {
+                addMessage('Please connect first', 'error');
+                return;
+            }
+            
+            const partnerId = document.getElementById('partnerId').value;
+            const subscription = stompClient.subscribe('/topic/partner/' + partnerId + '/updates', function (message) {
+                const data = JSON.parse(message.body);
+                addMessage('Partner Update: ' + JSON.stringify(data, null, 2), 'success');
+            });
+            subscriptions.push(subscription);
+            addMessage('Subscribed to partner updates for partner ' + partnerId, 'success');
+        }
+
+        function subscribeToBroadcast() {
+            if (!stompClient) {
+                addMessage('Please connect first', 'error');
+                return;
+            }
+            
+            const subscription = stompClient.subscribe('/topic/broadcast', function (message) {
+                const data = JSON.parse(message.body);
+                addMessage('Broadcast Message: ' + JSON.stringify(data, null, 2), 'success');
+            });
+            subscriptions.push(subscription);
+            addMessage('Subscribed to broadcast messages', 'success');
+        }
+
+        function sendDriverLocationUpdate() {
+            if (!stompClient) {
+                addMessage('Please connect first', 'error');
+                return;
+            }
+            
+            const driverId = document.getElementById('testDriverId').value;
+            const locationUpdate = {
+                driverId: parseInt(driverId),
+                deliveryId: 1,
+                lat: 9.1450 + (Math.random() - 0.5) * 0.01,
+                longitude: 40.4897 + (Math.random() - 0.5) * 0.01,
+                speedKmh: 20 + Math.random() * 30,
+                headingDegrees: Math.random() * 360,
+                driverName: 'Driver ' + driverId,
+                vehicleInfo: 'Vehicle ' + driverId,
+                deliveryStatus: 'IN_PROGRESS'
+            };
+            
+            stompClient.send('/app/driver/location', {}, JSON.stringify(locationUpdate));
+            addMessage('Sent driver location update: ' + JSON.stringify(locationUpdate, null, 2), 'success');
+        }
+
+        function sendDeliveryStatusUpdate() {
+            if (!stompClient) {
+                addMessage('Please connect first', 'error');
+                return;
+            }
+            
+            const deliveryId = document.getElementById('testDeliveryId').value;
+            const statusUpdate = {
+                deliveryId: parseInt(deliveryId),
+                status: 'IN_PROGRESS',
+                message: 'Driver is on the way',
+                driverId: 1,
+                driverName: 'Driver 1',
+                customerId: 1,
+                partnerId: 1,
+                estimatedArrival: '15 minutes',
+                currentLocation: 'Near Bole'
+            };
+            
+            stompClient.send('/app/delivery/status', {}, JSON.stringify(statusUpdate));
+            addMessage('Sent delivery status update: ' + JSON.stringify(statusUpdate, null, 2), 'success');
+        }
+
+        function sendPartnerUpdate() {
+            if (!stompClient) {
+                addMessage('Please connect first', 'error');
+                return;
+            }
+            
+            const partnerId = document.getElementById('testPartnerId').value;
+            const partnerUpdate = {
+                partnerId: parseInt(partnerId),
+                deliveryId: 1,
+                updateType: 'NEW_DELIVERY',
+                message: 'New delivery assigned',
+                deliveryStatus: 'ASSIGNED',
+                driverId: 1,
+                driverName: 'Driver 1',
+                customerName: 'Customer 1',
+                deliveryAddress: 'Bole, Addis Ababa',
+                estimatedArrival: '30 minutes',
+                totalAmount: 150.0
+            };
+            
+            stompClient.send('/app/partner/update', {}, JSON.stringify(partnerUpdate));
+            addMessage('Sent partner update: ' + JSON.stringify(partnerUpdate, null, 2), 'success');
+        }
+
+        function sendBroadcastMessage() {
+            if (!stompClient) {
+                addMessage('Please connect first', 'error');
+                return;
+            }
+            
+            const message = document.getElementById('broadcastMessage').value;
+            stompClient.send('/app/broadcast', {}, message);
+            addMessage('Sent broadcast message: ' + message, 'success');
+        }
+
+        function addMessage(message, type) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + (type || '');
+            messageDiv.textContent = new Date().toLocaleTimeString() + ': ' + message;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function clearMessages() {
+            document.getElementById('messages').innerHTML = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{"@timestamp":"2025-08-25T04:10:42.2437307+02:00","level":"INFO","logger_name":"org.driver.driverapp.service.AuditLogService","message":"Creating audit log: entityType=DELIVERY, entityId=100, action=UPDATE"}
+{"@timestamp":"2025-08-25T04:10:42.2482997+02:00","level":"INFO","logger_name":"org.driver.driverapp.service.AuditLogService","message":"Creating audit log: entityType=DELIVERY, entityId=100, action=CREATE"}
+{"@timestamp":"2025-08-25T04:10:42.2630521+02:00","level":"INFO","logger_name":"org.driver.driverapp.service.AuditLogService","message":"Creating audit log: entityType=DELIVERY, entityId=100, action=CREATE"}
+{"@timestamp":"2025-08-25T04:21:12.0637789+02:00","level":"INFO","logger_name":"org.driver.driverapp.service.AuditLogService","message":"Creating audit log: entityType=DELIVERY, entityId=100, action=UPDATE"}
+{"@timestamp":"2025-08-25T04:21:12.0694+02:00","level":"INFO","logger_name":"org.driver.driverapp.service.AuditLogService","message":"Creating audit log: entityType=DELIVERY, entityId=100, action=CREATE"}
+{"@timestamp":"2025-08-25T04:21:12.0861817+02:00","level":"INFO","logger_name":"org.driver.driverapp.service.AuditLogService","message":"Creating audit log: entityType=DELIVERY, entityId=100, action=CREATE"}

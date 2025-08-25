@@ -1,7 +1,10 @@
 package org.driver.driverapp.service;
 
 import lombok.RequiredArgsConstructor;
-import org.driver.driverapp.dto.PartnerResponseDTO;
+
+import org.driver.driverapp.dto.partner.response.PartnerResponseDTO;
+import org.driver.driverapp.dto.partner.request.CreatePartnerRequestDTO;
+import org.driver.driverapp.dto.partner.request.UpdatePartnerRequestDTO;
 import org.driver.driverapp.mapper.PartnerMapper;
 import org.driver.driverapp.model.Partner;
 import org.driver.driverapp.repository.PartnerRepository;
@@ -32,12 +35,17 @@ public class PartnerService {
     }
 
     // ➕ Create new partner
-    public PartnerResponseDTO createPartner(Partner partner) {
+    public PartnerResponseDTO createPartner(CreatePartnerRequestDTO dto) {
+        Partner partner = new Partner();
+        partner.setName(dto.getName());
+        partner.setAddress(dto.getAddress());
+        partner.setPhone(dto.getPhone());
+        partner.setEmail(dto.getEmail());
         return partnerMapper.toDTO(partnerRepository.save(partner));
     }
 
     // ✏️ Update existing partner
-    public PartnerResponseDTO updatePartner(Long id, Partner updatedPartner) {
+    public PartnerResponseDTO updatePartner(Long id, UpdatePartnerRequestDTO updatedPartner) {
         return partnerRepository.findById(id)
                 .map(existing -> {
                     existing.setName(updatedPartner.getName());

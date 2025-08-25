@@ -1,13 +1,12 @@
 package org.driver.driverapp.service;
 
 import lombok.RequiredArgsConstructor;
-import org.driver.driverapp.dto.AdminRegistrationRequestDTO;
-import org.driver.driverapp.dto.CreateDriverRequestDTO;
+import org.driver.driverapp.dto.admin.AdminRegistrationRequestDTO;
+import org.driver.driverapp.dto.driver.request.CreateDriverRequestDTO;
 import org.driver.driverapp.enums.DriverStatus;
 import org.driver.driverapp.enums.Role;
 import org.driver.driverapp.model.Driver;
 import org.driver.driverapp.model.User;
-import org.driver.driverapp.repository.DriverRepository;
 import org.driver.driverapp.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 public class RegistrationService {
 
     private final UserRepository userRepository;
-    private final DriverRepository driverRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     public void registerNewDriver(CreateDriverRequestDTO request) {

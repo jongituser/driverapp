@@ -1,0 +1,24 @@
+package org.driver.driverapp.enums;
+
+public enum AuditEntityType {
+    USER,
+    DRIVER,
+    CUSTOMER,
+    PARTNER,
+    DELIVERY,
+    PAYMENT,
+    INVENTORY_ITEM,
+    PRODUCT,
+    SUPPLIER,
+    ADDRESS,
+    POSTAL_CODE,
+    ANALYTICS_RECORD,
+    NOTIFICATION,
+    NOTIFICATION_TEMPLATE,
+    WALLET,
+    WALLET_TRANSACTION,
+    INVOICE,
+    DRIVER_EARNING,
+    PARTNER_BILLING
+}
+

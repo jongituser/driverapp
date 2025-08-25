@@ -2,8 +2,10 @@ package org.driver.driverapp.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.driver.driverapp.dto.PartnerResponseDTO;
-import org.driver.driverapp.model.Partner;
+
+import org.driver.driverapp.dto.partner.response.PartnerResponseDTO;
+import org.driver.driverapp.dto.partner.request.CreatePartnerRequestDTO;
+import org.driver.driverapp.dto.partner.request.UpdatePartnerRequestDTO;
 import org.driver.driverapp.service.PartnerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,15 +39,15 @@ public class PartnerController {
     // ➕ ADMIN: Create partner
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<PartnerResponseDTO> createPartner(@RequestBody @Valid Partner partner) {
-        return ResponseEntity.ok(partnerService.createPartner(partner));
+    public ResponseEntity<PartnerResponseDTO> createPartner(@RequestBody @Valid CreatePartnerRequestDTO dto) {
+        return ResponseEntity.ok(partnerService.createPartner(dto));
     }
 
     // ✏️ ADMIN: Update partner
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<PartnerResponseDTO> updatePartner(@PathVariable Long id, @RequestBody @Valid Partner partner) {
-        return ResponseEntity.ok(partnerService.updatePartner(id, partner));
+    public ResponseEntity<PartnerResponseDTO> updatePartner(@PathVariable Long id, @RequestBody @Valid UpdatePartnerRequestDTO dto) {
+        return ResponseEntity.ok(partnerService.updatePartner(id, dto));
     }
 
     // ❌ ADMIN: Delete partner

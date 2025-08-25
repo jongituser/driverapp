@@ -4,6 +4,7 @@ public enum Role {
     ADMIN,
     MODERATOR,
     DISPATCHER,
+    PARTNER,
     DRIVER,
-    USER
+    CUSTOMER,
 }
